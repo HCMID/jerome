@@ -1,0 +1,179 @@
+import org.apache.tools.ant.filters.*
+
+/* jerome project
+ */
+apply plugin: "base"
+
+
+
+apply from: "repos.gradle"
+
+group = "edu.holycross.shot"
+version = "0.1.0"
+
+repositories {
+    mavenCentral()
+    /*
+    maven {
+        url "http://beta.hpcc.uh.edu/nexus/content/repositories/releases/"
+    }
+    */
+}
+
+dependencies {
+}
+
+
+
+///////////////////// ASSEMBLE TEXTS: ////////////////////////////
+///
+task genevaEditions(type: Copy) {
+    description = "Copies edition of Geneva 49 to build area."
+    from (file("${gen49}/texts/editions")) {
+      include "**/**.xml"
+    }
+
+    into "${buildDir}/editions"
+}
+
+task stGallenEditions(type: Copy) {
+    description = "Copies edition of St. Gallen 298 to build area."
+    from (file("${stg}/texts/editions")) {
+      include "**/**.xml"
+    }
+    into "${buildDir}/editions"
+}
+
+
+
+task editions(dependsOn: [genevaEditions, stGallenEditions]) {
+  description = "Copies archival XML editions to build area."
+}
+editions.doLast {
+  println "Done copying editions."
+}
+
+
+
+
+
+///////////////////// ASSEMBLE IMAGES: ////////////////////////////
+///
+
+task genevaImageData(type: Copy) {
+    description = "Copies image collection data for Geneva 49 to build area."
+    from (file("${gen49}/images/data")) {
+      include "**/**.csv"
+    }
+
+    into "${buildDir}/imagedata"
+}
+
+task stGallenImageData(type: Copy) {
+    description = "Copies image collection data for St. Gallen 298 to build area."
+
+    from (file("${stg}/images/data")) {
+      include "**/**.csv"
+    }
+    into "${buildDir}/imagedata"
+}
+
+
+
+task imageData(dependsOn: [genevaImageData, stGallenImageData]) {
+  description = "Copies image collection data to build area."
+}
+imageData.doLast {
+  println "Done copying image collection data."
+}
+
+
+
+///////////////////// ASSEMBLE COLLECTIONS: ////////////////////////////
+///
+
+task genevaCollections(type: Copy) {
+    description = "Copies collection data for Geneva 49 to build area."
+    from (file("${gen49}/collections")) {
+      include "**/**.csv"
+    }
+    into "${buildDir}/collections"
+}
+
+task stGallenCollections(type: Copy) {
+    description = "Copies collection data for St. Gallen 298 to build area."
+
+    from (file("${stg}/collections")) {
+      include "**/**.csv"
+    }
+    into "${buildDir}/collections"
+}
+
+
+
+task collections(dependsOn: [genevaCollections, stGallenCollections]) {
+  description = "Copies collection data to build area."
+}
+imageData.doLast {
+  println "Done copying collection data."
+}
+
+
+
+
+///////////////////// ASSEMBLE INDICES: ////////////////////////////
+///
+
+task genevaIndices(type: Copy) {
+    description = "Copies index data for Geneva 49 to build area."
+    from (file("${gen49}/indices")) {
+      include "**/**.csv"
+    }
+    into "${buildDir}/indices"
+}
+
+task stGallenIndices(type: Copy) {
+    description = "Copies index data for St. Gallen 298 to build area."
+
+    from (file("${stg}/indices")) {
+      include "**/**.csv"
+    }
+    into "${buildDir}/indices"
+}
+
+
+
+task indices(dependsOn: [genevaIndices, stGallenIndices]) {
+  description = "Copies index data to build area."
+}
+imageData.doLast {
+  println "Done copying index collection data."
+}
+
+
+
+
+
+task gather(dependsOn: [editions, imageData, collections, indices]) {
+  description = "Assembles composite repository covering both Geneva 49 and St. Gallen 298"
+}
+gather.doLast {
+  println "Done assembling composite in ${buildDir}"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
